@@ -1,11 +1,11 @@
-# CP-Templates
+# CP Templates
 
  **_Range Queries_**
 
-- [ ] Segment tree  
-- [ ] Fenwick tree  
-- [ ] Sparse Table  
+- [x] Segment tree  
+- [x] Fenwick tree  
+- [x] Sparse Table  
 
 **_Math_**
 
-- [ ] Sieve  
+- [x] Sieve  
