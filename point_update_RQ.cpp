@@ -21,7 +21,7 @@ struct PURQ
     int n;
     vector<T> sg;
     PURQ() = default;
-    PURQ(int n) : n(n), sg(4 * n + 5) {}
+    PURQ(int n) : n(n), sg(4 * (n + 5)) {}
     
     // to be changed =>> (min , max , sum , gcd , ..)
     T Q(T a, T b){
@@ -56,9 +56,9 @@ ios_base::sync_with_stdio(false),cin.tie(nullptr),cout.tie(nullptr);
 #ifndef ONLINE_JUDGE
 freopen("input.txt", "r", stdin), freopen("output.txt", "w", stdout);
 #endif
-int tc=1;
-// cin>>tc;
-    while(tc--){
+    int tc = 1;
+    // cin>>tc;
+    for(int i=1;i<=tc;++i){
         solve();
     }
 }

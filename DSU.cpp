@@ -1,3 +1,14 @@
+
+/*
+    DSU (Disjoint Set Union) Data Structure
+    1. Union(u,v) : Merge two sets u and v
+    2. Get_Leader(u) : Get the leader of the set u belongs to
+    3. SameSet(u,v) : Check if u and v belongs to the same set
+    4. Get_Size(u) : Get the size of the set u belongs to
+    5. CC() : Get the number of connected components
+*/
+
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -36,16 +47,18 @@ struct DSU{
 };
 
 void solve(){
-    DSU D(5);
     
 }
 
 int main()
 {
 ios_base::sync_with_stdio(false),cin.tie(nullptr),cout.tie(nullptr);
-    int tc=1;
+#ifndef ONLINE_JUDGE
+freopen("input.txt", "r", stdin), freopen("output.txt", "w", stdout);
+#endif
+    int tc = 1;
     // cin>>tc;
-    while(tc--){
+    for(int i=1;i<=tc;++i){
         solve();
     }
 }
