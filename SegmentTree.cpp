@@ -35,7 +35,7 @@ private:
                 lazy[lc(node)] = lazy[node];
                 lazy[rc(node)] = lazy[node];
             }
-            lazy[node] = 0;
+            lazy[node] = NO_UPDATE;
         }
     }
 
