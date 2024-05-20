@@ -15,7 +15,7 @@ private:
     #define rc(node) (2 * node + 1)
     #define mid(left, right) ((left + right) / 2)
     
-    const U DEFAULT = 0; // Replace this line with DEFAULT
+    const T DEFAULT = 0; // Replace this line with DEFAULT
     const U NO_UPDATE = 0; // Replace this line with NO_UPDATE
     int size;
     vector<T> seg_tree;
@@ -78,8 +78,8 @@ public:
     : size(size)
     , DEFAULT(DEFAULT)
     , NO_UPDATE(NO_UPDATE)
-    , lazy(4 * (size + 1))
-    , seg_tree(4 * (size + 1))
+    , lazy(4 * (size + 1),NO_UPDATE)
+    , seg_tree(4 * (size + 1),DEFAULT)
     {
         if (!arr.empty())
             Build(1, 1, size, arr);
