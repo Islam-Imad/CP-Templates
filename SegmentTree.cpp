@@ -63,7 +63,7 @@ private:
         seg_tree[node] = Operation(seg_tree[lc(node)], seg_tree[rc(node)]);
     }
 
-    U Query(int node, int l, int r, int ql, int qr) const {
+    U Query(int node, int l, int r, int ql, int qr){
         Propogate(node, l, r);
         if (l > qr || r < ql)
             return DEFAULT;
@@ -90,7 +90,7 @@ public:
         Update(1, 1, size, l, r, val);
     }
 
-    U Query(int l, int r) const {
+    U Query(int l, int r){
         return Query(1, 1, size, l, r);
     }
 };
