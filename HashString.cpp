@@ -54,7 +54,7 @@ public:
     }
 };
 mt19937 rng((uint32_t)chrono::steady_clock::now().time_since_epoch().count());
-const long long HashedString::POW = uniform_int_distribution<long long>(31, 31)(rng);
+const long long HashedString::POW = uniform_int_distribution<long long>(31, MOD - 1)(rng);
 vector<long long> HashedString::get_pow = {};
 
 void solve(){
