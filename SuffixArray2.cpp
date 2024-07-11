@@ -5,11 +5,34 @@ using namespace std;
 #define X first
 #define Y second
 
+void radix_sort(vector<pair<pair<int, int>, int>> &arr) {
+	for (int i : vector<int>{2, 1}) {
+		auto key = [&](const pair<pair<int, int>, int> &x) {
+			return i == 1 ? x.first.first : x.first.second;
+		};
+		int max = 0;
+		for (const auto &i : arr) { max = std::max(max, key(i)); }
+		vector<int> occs(max + 1);
+		for (const auto &i : arr) { occs[key(i)]++; }
+		vector<int> start(max + 1);
+		for (int i = 1; i <= max; i++) {
+			start[i] = start[i - 1] + occs[i - 1];
+		}
+
+		vector<pair<pair<int, int>, int>> new_arr(arr.size());
+		for (const auto &i : arr) {
+			new_arr[start[key(i)]] = i;
+			start[key(i)]++;
+		}
+		arr = new_arr;
+	}
+}
+
 void solve()
 {
     int n;
     string s;
-    cin >> s, s += ' ', n = s.size(); // s += '$'
+    cin >> s, s += ' ', n = s.size(); // or s += '$'
     vector<pair<pair<int, int>, int>> suffixes(n);
     vector<int> lcp(n - 1), sortingOrder(n), suffixesIdx(n);
     for (int i = 0; i < n; ++i)
@@ -30,7 +53,7 @@ void solve()
             val = {sortingOrder[idx], sortingOrder[(idx + len) % n]};
         }
 
-        sort(suffixes.begin(), suffixes.end());
+        radix_sort(suffixes);
 
         for (int i = 1; i < n; ++i)
         {
