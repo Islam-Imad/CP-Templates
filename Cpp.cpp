@@ -26,3 +26,8 @@ freopen("input.txt", "r", stdin), freopen("output.txt", "w", stdout);
         solve();
     }
 }
+/*
+  // bash script to create files from a to n and copy template file into each file created
+    for i in {a..n}; do touch $i.cpp ; done
+    for i in {a..n}; do cp template.cpp $i.cpp ; done
+*/
