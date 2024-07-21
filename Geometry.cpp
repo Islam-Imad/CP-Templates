@@ -82,6 +82,50 @@ ld TriangleArea3(P a, P b, P c){
     return abs(crossp(vec(a, b), vec(a, c))) / 2.0;
 }
 
+struct cmpX
+{
+    bool operator()(const point &a, const point &b)
+    {
+        if (dcmp(a.X, b.X) != 0)
+            return dcmp(a.X, b.X) < 0;
+        return dcmp(a.Y, b.Y) < 0;
+    }
+};
+
+struct cmpY
+{
+    bool operator()(const point &a, const point &b) const
+    {
+        if (dcmp(a.Y, b.Y) != 0)
+            return dcmp(a.Y, b.Y) < 0;
+        return dcmp(a.X, b.X) < 0;
+    }
+};
+
+pair<point, point> closest_pair(vector<point> v)
+{
+    sort(v.begin(), v.end(), cmpX());
+    set<point, cmpY> box;
+    double best = OO;
+    pair<point, point> best_pair;
+    for (int i = 0, j = 0; i < v.size(); i++)
+    {
+        while (j < i && v[i].X - v[j].X > best)
+            box.erase(v[j++]);
+        auto l = box.lower_bound(point(-OO, v[i].Y - best));
+        auto r = box.upper_bound(point(-OO, v[i].Y + best));
+        for (auto it = l; it != r; it++)
+        {
+            double d = length(vec(v[i], *it));
+            if (d < best)
+                best = d, best_pair = {v[i], *it};
+        }
+        box.insert(v[i]);
+    }
+    return best_pair;
+}
+
+
 void solve(){
     
 }
