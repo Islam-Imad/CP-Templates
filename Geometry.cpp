@@ -1,7 +1,7 @@
 
 #include <bits/stdc++.h>
 using namespace std;
-
+const double OO = 1e8;
 #define ll long long int
 #define ld long double
 #define X first
@@ -15,6 +15,8 @@ using namespace std;
 #define normalize(a) (a/abs(a))
 #define rotateA(p,ang,about) ((p-about)*exp(P(0,ang)) + about)
 #define rotate0(p,ang) (p*exp(P(0,ang)))
+#define reflect0(v, m) (conj(v / m) * m)
+#define reflectA(v, a, m) (reflect0(vec(m, v), vec(m, rotateA(v, a, m)) + m))
 
 typedef complex<ld> P;
 
