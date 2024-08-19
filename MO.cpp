@@ -33,6 +33,8 @@ void slide(int l,int r){
     while(rq > r) remove(rq--);
 }
 
+
+
 void solve(){
     
 }
