@@ -107,6 +107,11 @@ struct DFS
         }
         return u;
     }
+    
+    int get_dist(int u, int v)
+    {
+        return depth[u] + depth[v] - 2 * depth[get_lca(u, v)];
+    }
 
     int get_lca(int u, int v)
     {
