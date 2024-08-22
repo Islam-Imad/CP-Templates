@@ -27,9 +27,9 @@ void remove(int idx){
 }
 
 void slide(int l,int r){
-    while(lq < l) remove(lq++);
     while(lq > l) add(--lq);
     while(rq < r) add(++rq);
+    while(lq < l) remove(lq++);
     while(rq > r) remove(rq--);
 }
 
