@@ -74,7 +74,7 @@ private:
 
 public:
     SegmentTree() = default;
-    SegmentTree(U DEFAULT,U NO_UPDATE, int size, const vector<T> &arr = {}) // Replace DEFAULT with T DEFAULT
+    SegmentTree(T DEFAULT,U NO_UPDATE, int size, const vector<T> &arr = {}) // Replace DEFAULT with T DEFAULT
     : size(size)
     , DEFAULT(DEFAULT)
     , NO_UPDATE(NO_UPDATE)
