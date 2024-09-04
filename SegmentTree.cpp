@@ -32,8 +32,8 @@ private:
             seg_tree[node] += lazy[node];
             if (l != r)
             {
-                lazy[lc(node)] = lazy[node];
-                lazy[rc(node)] = lazy[node];
+                lazy[lc(node)] += lazy[node];
+                lazy[rc(node)] += lazy[node];
             }
             lazy[node] = NO_UPDATE;
         }
