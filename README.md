@@ -43,5 +43,6 @@
 
 - [Contest Template](General/contest_template.cpp)
 - [C++](General/Cpp.cpp)
+- [Python](General/contest_template.py)
 - [Disciplines](General/Diciplinses.md)
 - [Errors](General/Errors.md)
