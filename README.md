@@ -1,5 +1,19 @@
 # CP-Templates
 
+
+## Graph Algorithms
+
+- [Bellman-Ford](Graphs/BellmanFor.cpp)
+- [Centroid Decomposition](Graphs/centroid_decomposition.cpp)
+- [Depth-First Search (DFS)](Graphs/DFS.cpp)
+- [Disjoint Set Union (DSU)](Graphs/DSU.cpp)
+- [Heavy-Light Decomposition (HLD)](Graphs/HLD.cpp)
+- [Lowest Common Ancestor (LCA)](Graphs/lca.cpp)
+- [LCA (Alternative)](Graphs/LCA.cpp)
+- [Shortest Path Faster Algorithm](Graphs/ShortestPathFasterAlgorithm.cpp)
+- [Tarjan's Algorithm](Graphs/tarjan.cpp)
+- [Trie](Graphs/trie.cpp)
+
 ## String Algorithms
 
 - [Aho-Corasick](Strings/Aho-Corasick.cpp)
