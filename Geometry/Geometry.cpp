@@ -1,75 +1,88 @@
 
 #include <bits/stdc++.h>
 using namespace std;
-const double OO = 1e8;
+const long double OO = 4e9;
 #define ll long long int
 #define ld long double
-#define X first
-#define Y second
+#define X real()
+#define Y imag()
 #define EPS 1e-9
 #define PI acos(-1)
-#define vec(a,b) (b-a)
-#define dotp(a,b) (conj(a)*b).real()
-#define crossp(a,b) (conj(a)*b).imag()
-#define same(a,b) (abs(a-b) < EPS)
-#define normalize(a) (a/abs(a))
-#define rotateA(p,ang,about) ((p-about)*exp(P(0,ang)) + about)
-#define rotate0(p,ang) (p*exp(P(0,ang)))
+#define vec(a, b) (b - a)
+#define dotp(a, b) (conj(a) * b).real()
+#define crossp(a, b) (conj(a) * b).imag()
+#define same(a, b) (abs(a - b) < EPS)
+#define normalize(a) (a / abs(a))
+#define rotateA(p, ang, about) ((p - about) * exp(P(0, ang)) + about)
+#define rotate0(p, ang) (p * exp(P(0, ang)))
 #define reflect0(v, m) (conj(v / m) * m)
 #define reflectA(v, a, m) (reflect0(vec(m, v), vec(m, rotateA(v, a, m)) + m))
+#define length(v) (hypot(v.Y, v.X))
 
 typedef complex<ld> P;
 
-
-int dcmp(ld x, ld y){
-    if(fabs(x - y) < 1e-9) return 0;
+int dcmp(ld x, ld y)
+{
+    if (fabs(x - y) < 1e-9)
+        return 0;
     return x < y ? -1 : 1;
 }
 
-P pointToLine(P a, P b, P c){
+P pointToLine(P a, P b, P c)
+{
     // answer is the projection of point c on line ab
-    return a + ((dotp(vec(a,b), vec(a, c)) / norm(vec(a,b))) * (vec(a, b)));
+    return a + ((dotp(vec(a, b), vec(a, c)) / norm(vec(a, b))) * (vec(a, b)));
 }
 
-ld from_deg_to_rad(ld deg){
-    ld ret =  deg * PI / 180.0;
-    if(ret < 0) ret += 2 * PI;
+ld from_deg_to_rad(ld deg)
+{
+    ld ret = deg * PI / 180.0;
+    if (ret < 0)
+        ret += 2 * PI;
     return ret;
 }
 
-ld from_rad_to_deg(ld rad){
-    ld ret =  rad * 180.0 / PI;
-    if(ret < 0) ret += 360;
+ld from_rad_to_deg(ld rad)
+{
+    ld ret = rad * 180.0 / PI;
+    if (ret < 0)
+        ret += 360;
     return ret;
 }
 
-ld distToLine(P a, P b, P c){
+ld distToLine(P a, P b, P c)
+{
     return abs(crossp(vec(a, b), vec(a, c))) / abs(b - a);
 }
 
-bool isCollinear(P a, P b, P c){
+bool isCollinear(P a, P b, P c)
+{
     return dcmp(crossp(vec(a, b), vec(a, c)), 0) == 0;
 }
 
-bool isPointOnRay(P a, P b, P c){
+bool isPointOnRay(P a, P b, P c)
+{
     if (!isCollinear(a, b, c))
         return false;
     return dcmp(dotp(vec(a, b), vec(a, c)), 0) == 1;
     // return same(normalize(b - a), normalize(c - a));
 }
 
-bool isPointOnSegment(P a, P b, P c){
+bool isPointOnSegment(P a, P b, P c)
+{
     // ld d1 = abs(b - a), d2 = abs(c - a);
     // return same(d1+d2,abs(a-b));
     return isPointOnRay(a, b, c) && isPointOnRay(b, a, c);
 }
 
-ld CircleArea(ld r){
+ld CircleArea(ld r)
+{
     return PI * r * r;
 }
 
 // Triangle Area two sides and angle between them
-ld TriangleArea(ld a, ld b, ld angle){
+ld TriangleArea(ld a, ld b, ld angle)
+{
     return 0.5 * a * b * sin(angle);
 }
 // Triangle Area three sides
@@ -78,13 +91,14 @@ ld TriangleArea(ld a, ld b, ld angle){
 //     return sqrt(s * (s - a) * (s - b) * (s - c));
 // }
 // Triangle Area three points
-ld TriangleArea3(P a, P b, P c){
+ld TriangleArea3(P a, P b, P c)
+{
     return abs(crossp(vec(a, b), vec(a, c))) / 2.0;
 }
 
 struct cmpX
 {
-    bool operator()(const point &a, const point &b)
+    bool operator()(const P &a, const P &b)
     {
         if (dcmp(a.X, b.X) != 0)
             return dcmp(a.X, b.X) < 0;
@@ -94,7 +108,7 @@ struct cmpX
 
 struct cmpY
 {
-    bool operator()(const point &a, const point &b) const
+    bool operator()(const P &a, const P &b) const
     {
         if (dcmp(a.Y, b.Y) != 0)
             return dcmp(a.Y, b.Y) < 0;
@@ -102,18 +116,18 @@ struct cmpY
     }
 };
 
-pair<point, point> closest_pair(vector<point> v)
+pair<P, P> closest_pair(vector<P> v)
 {
     sort(v.begin(), v.end(), cmpX());
-    set<point, cmpY> box;
+    set<P, cmpY> box;
     double best = OO;
-    pair<point, point> best_pair;
+    pair<P, P> best_pair;
     for (int i = 0, j = 0; i < v.size(); i++)
     {
         while (j < i && v[i].X - v[j].X > best)
             box.erase(v[j++]);
-        auto l = box.lower_bound(point(-OO, v[i].Y - best));
-        auto r = box.upper_bound(point(-OO, v[i].Y + best));
+        auto l = box.lower_bound(P(-OO, v[i].Y - best));
+        auto r = box.upper_bound(P(-OO, v[i].Y + best));
         for (auto it = l; it != r; it++)
         {
             double d = length(vec(v[i], *it));
@@ -125,20 +139,32 @@ pair<point, point> closest_pair(vector<point> v)
     return best_pair;
 }
 
-
-void solve(){
-    
+void solve()
+{
+    int n;
+    cin >> n;
+    vector<P> v(n);
+    for (int i = 0; i < n; ++i)
+    {
+        ll x, y;
+        cin >> x >> y;
+        v[i] = P(y, x);
+    }
+    pair<P, P> res = closest_pair(v);
+    // cout << res.first.Y << ' ' << res.first.X << ' ' << res.second.Y << ' ' << res.second.X << '\n';
+    cout << (ll)(res.first.X - res.second.X) * (ll)(res.first.X - res.second.X) + (ll)(res.first.Y - res.second.Y) * (ll)(res.first.Y - res.second.Y) << '\n';
 }
 
 int main()
 {
-ios_base::sync_with_stdio(false),cin.tie(nullptr),cout.tie(nullptr);
+    ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
 #ifndef ONLINE_JUDGE
-freopen("input.txt", "r", stdin), freopen("output.txt", "w", stdout);
+    freopen("input.txt", "r", stdin), freopen("output.txt", "w", stdout);
 #endif
     int tc = 1;
     // cin>>tc;
-    for(int i=1;i<=tc;++i){
+    for (int i = 1; i <= tc; ++i)
+    {
         solve();
     }
 }

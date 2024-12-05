@@ -38,6 +38,12 @@
 
 - [1D Objects](Geometry/1D-objects.cpp)
 - [General Geometry](Geometry/Geometry.cpp)
+- [Convex Hull](Geometry/ConvexHull.cpp)
+
+## Number Theory
+- [Sieve](NumberTheory/Sieve.cpp)
+- [LinearSieve](NumberTheory/LinearSieve.cpp)
+- [Extended Euclidean Algorithm](NumberTheory/ExtendedEuclidean.cpp)
 
 ## General
 
