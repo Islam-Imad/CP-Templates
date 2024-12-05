@@ -1,6 +1,5 @@
 # CP-Templates
 
-
 ## Graph Algorithms
 
 - [Bellman-Ford](Graphs/BellmanFor.cpp)
