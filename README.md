@@ -43,6 +43,7 @@
 - [Sieve](NumberTheory/Sieve.cpp)
 - [LinearSieve](NumberTheory/LinearSieve.cpp)
 - [Extended Euclidean Algorithm](NumberTheory/ExtendedEuclidean.cpp)
+- [Matrix Operations](NumberTheory/Matricies.cpp)
 
 ## General
 
