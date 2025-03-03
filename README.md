@@ -12,6 +12,8 @@
 - [Shortest Path Faster Algorithm](Graphs/ShortestPathFasterAlgorithm.cpp)
 - [Tarjan's Algorithm](Graphs/tarjan.cpp)
 - [Trie](Graphs/trie.cpp)
+- [Kosaraju's Algorithm](Graphs/Kosaraju.cpp)
+- [2-SAT](Graphs/2-SAT.cpp)
 
 ## String Algorithms
 
@@ -38,6 +40,7 @@
 - [1D Objects](Geometry/1D-objects.cpp)
 - [General Geometry](Geometry/Geometry.cpp)
 - [Convex Hull](Geometry/ConvexHull.cpp)
+
 
 ## Number Theory
 - [Sieve](NumberTheory/Sieve.cpp)
