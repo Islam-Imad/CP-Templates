@@ -24,6 +24,7 @@
 - [Suffix Array 1](Strings/SuffixArray1.cpp)
 - [Suffix Array 2](Strings/SuffixArray2.cpp)
 - [Z-function](Strings/z-function.cpp)
+- [suffix_autmaton](Strings/suffix_automaton.cpp)
 
 ## Range Queries
 
