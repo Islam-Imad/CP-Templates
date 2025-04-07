@@ -14,6 +14,7 @@
 - [Trie](Graphs/trie.cpp)
 - [Kosaraju's Algorithm](Graphs/Kosaraju.cpp)
 - [2-SAT](Graphs/2-SAT.cpp)
+- [Kuhn](Graphs/Kuhn.cpp)
 
 ## String Algorithms
 
