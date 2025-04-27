@@ -20,6 +20,40 @@ vector<int> compute_prefix(const string &pat){
     return lps;
 }
 
+vector<vector<int>> compute_prefix_2(const string &pat)
+{
+	int n = pat.size();
+	vector<vector<int>> dp(n, vector<int>(26, 0));
+	vector<int> lps(n);
+	for (int i = 1, k = 0; i < n; ++i)
+	{
+		while (k > 0 && pat[i] != pat[k])
+		{
+			k = lps[k - 1];
+		}
+		if (pat[i] == pat[k])
+		{
+			++k;
+		}
+		lps[i] = k;
+	}
+	for (int i = 1; i < n; ++i)
+	{
+		for (int j = 0; j < 26; ++j)
+		{
+			if (pat[i] != 'a' + j)
+			{
+				dp[i][j] = dp[lps[i - 1]][j];
+			}
+			else
+			{
+				dp[i][j] = i;
+			}
+		}
+	}
+	return dp;
+}
+
 int KMP(const string &str,const string &pat){
     int n = str.size(),m = pat.size(), ret = 0;
     vector<int> lps = compute_prefix(pat);
