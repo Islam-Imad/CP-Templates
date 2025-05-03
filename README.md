@@ -36,6 +36,7 @@
 - [Segment Tree](Range_Queries/SegmentTree.cpp)
 - [Sparse Table](Range_Queries/SparseTable.cpp)
 - [Square Root Decomposition](Range_Queries/Square_Root_Decomposition.cpp)
+- [Prefix Sum](Range_Queries/prefix_sum_1d_2d.cpp)
 
 ## Geometry
 
