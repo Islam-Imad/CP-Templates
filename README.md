@@ -44,12 +44,18 @@
 - [General Geometry](Geometry/Geometry.cpp)
 - [Convex Hull](Geometry/ConvexHull.cpp)
 
-
 ## Number Theory
+
 - [Sieve](NumberTheory/Sieve.cpp)
 - [LinearSieve](NumberTheory/LinearSieve.cpp)
 - [Extended Euclidean Algorithm](NumberTheory/ExtendedEuclidean.cpp)
 - [Matrix Operations](NumberTheory/Matricies.cpp)
+
+## Miscellaneous
+
+- [Binary Search](Miscellaneous/binary_search.cpp)
+- [Ternary Search](Miscellaneous/ternary_search.cpp)
+- [Monotone Stack](Miscellaneous/mono_stack.cpp)
 
 ## General
 
