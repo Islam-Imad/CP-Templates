@@ -15,6 +15,7 @@
 - [Kosaraju's Algorithm](Graphs/Kosaraju.cpp)
 - [2-SAT](Graphs/2-SAT.cpp)
 - [Kuhn](Graphs/Kuhn.cpp)
+- [Euler Graph](Graphs/EulerGraph.cpp)
 
 ## String Algorithms
 
