@@ -56,6 +56,24 @@ struct Kosaraju
                 dfs2(u, color++);
         return ncc = color;
     }
+
+    void print()
+    {
+        vector<vector<int>> components(ncc);
+        for (int i = 0; i < n; ++i)
+        {
+            components[comp[i]].push_back(i);
+        }
+        cout << ncc << '\n';
+        for (int i = 0; i < ncc; ++i)
+        {
+            // cout << "Component " << i << ": ";
+            cout << components[i].size() << " ";
+            for (int v : components[i])
+                cout << v << " ";
+            cout << '\n';
+        }
+    }
 };
 
 int main()
