@@ -38,6 +38,9 @@ vector<pair<int, int>> manacher(string s)
     for (int i = 0; i < n; ++i)
     {
         res[i] = {p[i + i + 1] / 2, p[i + i + 2] / 2};
+        // First ( . . . i . . .) l = i - (First - 1) , r = i + (First - 1)
+        // Second (. . i i+1 . . ) l = i - (Second - 1), r = i + 1 + (Second - 1)
+        // if second is zero l > r
     }
     return res;
 }

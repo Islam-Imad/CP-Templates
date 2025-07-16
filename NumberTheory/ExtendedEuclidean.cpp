@@ -20,7 +20,7 @@ ll gcd(ll a, ll b, ll &x, ll &y)
 }
 
 void solve(){
-    
+        
 }
 
 int main()
