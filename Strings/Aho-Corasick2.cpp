@@ -91,6 +91,10 @@ struct AhoCorasick
     }
 };
 
+/*
+the string may be added more than one :) 
+*/
+
 void solve()
 {
 }

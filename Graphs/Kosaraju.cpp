@@ -11,10 +11,6 @@ struct Kosaraju
 
     Kosaraju(int n) : n(n), adj(n), radj(n), comp(n), vis(n)
     {
-        adj.shrink_to_fit();
-        radj.shrink_to_fit();
-        comp.shrink_to_fit();
-        vis.shrink_to_fit();
     }
 
     void add_edge(int u, int v)

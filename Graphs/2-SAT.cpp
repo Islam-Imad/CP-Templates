@@ -84,6 +84,69 @@ struct TwoSat
     }
 };
 
+
+/*
+    v >= 3 then v >= 2
+    i [l, r] then i -> (>= l) and not(>= r + 1)
+    === BOOLEAN ALGEBRA CHEATSHEET ===
+
+■ BASIC OPERATIONS & SYMBOLS
+--------------------------------
+- AND (Conjunction):    A ∧ B, A & B, A · B
+- OR (Disjunction):     A ∨ B, A | B, A + B
+- NOT (Negation):       ¬A, ~A, A'
+- IMPLICATION:          A → B, A ⇒ B
+- EQUIVALENCE:          A ↔ B, A ≡ B
+
+■ TRUTH TABLES
+--------------------------------
+| A | B | A∧B | A∨B | A→B | ¬A |
+|---|---|-----|-----|-----|----|
+| 0 | 0 |  0  |  0  |  1  | 1  |
+| 0 | 1 |  0  |  1  |  1  | 1  |
+| 1 | 0 |  0  |  1  |  0  | 0  |
+| 1 | 1 |  1  |  1  |  1  | 0  |
+
+■ KEY LAWS & IDENTITIES
+--------------------------------
+→ Identity:
+   A ∨ 0 = A      A ∧ 1 = A
+
+→ Domination:
+   A ∨ 1 = 1      A ∧ 0 = 0
+
+→ Idempotent:
+   A ∨ A = A      A ∧ A = A
+
+→ Commutative:
+   A ∨ B = B ∨ A  A ∧ B = B ∧ A
+
+→ Associative:
+   (A ∨ B) ∨ C = A ∨ (B ∨ C)
+   (A ∧ B) ∧ C = A ∧ (B ∧ C)
+
+→ Distributive:
+   A ∧ (B ∨ C) = (A ∧ B) ∨ (A ∧ C)
+   A ∨ (B ∧ C) = (A ∨ B) ∧ (A ∨ C)
+
+→ De Morgan’s:
+   ¬(A ∧ B) = ¬A ∨ ¬B
+   ¬(A ∨ B) = ¬A ∧ ¬B
+
+→ Implication:
+   A → B ≡ ¬A ∨ B
+
+→ Contrapositive:
+   A → B ≡ ¬B → ¬A
+
+■ QUICK EXAMPLES
+--------------------------------
+- A ∧ ¬A = 0       (Contradiction)
+- A ∨ ¬A = 1       (Tautology)
+- ¬¬A = A          (Double Negation)
+- A → B ≡ ¬B → ¬A  (Contrapositive)
+*/
+
 int main()
 {
 }
