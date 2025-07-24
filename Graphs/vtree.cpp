@@ -9,6 +9,8 @@ using namespace std;
 #define all(x) (x).begin(), (x).end()
 #define rall(x) (x).rbegin(), (x).rend()
 
+#pragma GCC optimize("Ofast,unroll-loops")
+
 struct virtual_tree
 {
     int n;
@@ -17,10 +19,11 @@ struct virtual_tree
     vector<int> in, out;
     vector<int> depth;
     vector<vector<ll>> lv;
-    vector<vector<int>> adj;
+    vector<vector<pair<int, int>>> adj;
     vector<vector<int>> at_dep;
     vector<vector<pair<int, int>>> vadj;
     vector<vector<int>> up;
+    vector<int> dis;
 
     virtual_tree(int n, int k)
     {
@@ -37,34 +40,33 @@ struct virtual_tree
         in.assign(n + 1, -1);
         out.assign(n + 1, -1);
         depth.assign(n + 1, 0);
-        adj.assign(n + 1, vector<int>());
-        at_dep.assign(n + 1, vector<int>());
+        adj.assign(n + 1, vector<pair<int, int>>());
         vadj.assign(n + 1, vector<pair<int, int>>());
         up.assign(n + 1, vector<int>(k + 1));
-        lv.assign(n + 1, vector<ll>(k + 1));
+        dis.assign(n + 1, 0);
     }
 
-    void add_edge(int u, int v)
+    void add_edge(int u, int v, int d)
     {
-        adj[u].push_back(v);
-        adj[v].push_back(u);
+        adj[u].push_back({v, d});
+        adj[v].push_back({u, d});
     }
 
-    void dfs(int u, int p = 0)
+    void dfs(int u, int p, int d)
     {
         in[u] = dfs_time++;
-        up[u][0] = p;
         depth[u] = depth[p] + 1;
-        at_dep[depth[u]].push_back(u);
+        up[u][0] = p;
+        dis[u] = d + dis[p];
         for (int i = 1; i <= k; ++i)
         {
             up[u][i] = up[up[u][i - 1]][i - 1];
         }
-        for (int v : adj[u])
+        for (auto [v, d2] : adj[u])
         {
             if (v != p)
             {
-                dfs(v, u);
+                dfs(v, u, d2);
             }
         }
         out[u] = dfs_time++;
@@ -93,10 +95,9 @@ struct virtual_tree
         }
         return up[u][0];
     }
-
     int dist(int u, int v)
     {
-        return depth[u] + depth[v] - 2 * depth[lca(u, v)];
+        return dis[u] + dis[v] - 2 * dis[lca(u, v)];
     }
 
     vector<int> pair_lcas(vector<int> nodes)
@@ -123,34 +124,7 @@ struct virtual_tree
         {
             int u = res[i], v = res[i + 1];
             int lca_uv = lca(u, v);
-            vadj[lca_uv].push_back({v, depth[v] - depth[lca_uv]});
-        }
-        return res;
-    }
-
-    void build_val()
-    {
-        for (int val = n; val >= 1; --val)
-        {
-            for (int i = 1; i <= k and val + (1 << (i - 1)) <= n; ++i)
-            {
-                lv[val][i] = min(lv[val][i - 1], lv[val + (1 << (i - 1))][i - 1]);
-            }
-        }
-    }
-
-    ll get_val(int dep, int mvp = 0)
-    {
-        ll res = 1e18;
-        mvp += 1;
-        mvp = min(mvp, n - dep + 1);
-        for (int i = 0; i <= k; ++i)
-        {
-            if (mvp & (1 << i))
-            {
-                res = min(res, lv[dep][i]);
-                dep += (1 << i);
-            }
+            vadj[lca_uv].push_back({v, dis[v] - dis[lca_uv]});
         }
         return res;
     }
@@ -159,55 +133,64 @@ struct virtual_tree
 /*
 https://atcoder.jp/contests/abc340/tasks/abc340_g
 https://codeforces.com/gym/104128/problem/E
+https://www.hackerrank.com/contests/worldcupsemifinals/challenges/wccity/problem
 */
 
 void solve()
 {
-    int n, cd;
-    cin >> n;
+    int n, q;
+    cin >> n >> q;
     virtual_tree vt(n, 20);
-    for (int i = 1; i <= n; ++i)
-    {
-        cin >> vt.lv[i][0];
-    }
-
+    vector<ll> vis(n + 1, 0);
+    vector<ll> dp(n + 1, 0);
+    vector<ll> dp2(n + 1, 0);
+    vector<ll> dp3(n + 1, 0);
     for (int i = 1; i < n; ++i)
     {
-        int u, v;
-        cin >> u >> v;
-        vt.add_edge(u, v);
+        int u, v, d;
+        cin >> u >> v >> d;
+        vt.add_edge(u, v, d);
     }
-    vt.dfs(1);
-    vt.build_val();
-
-    function<ll(int, int)> calc = [&](int u, int p) -> ll
+    vt.dfs(1, 0, 0);
+    // Example of a lambda function, renamed to avoid conflict with vt.dfs
+    function<void(int, int)> print_edges = [&](int u, int p)
     {
-        if (vt.depth[u] == cd)
+        dp2[u] = vis[u];
+        dp[u] = 0;
+        dp3[u] = 0;
+        for (auto [v, d] : vt.vadj[u])
         {
-            return vt.get_val(1, cd - 1);
+            if (v != p)
+            {
+                print_edges(v, u);
+                ll add = (dp[v] + (dp2[v] * d));
+                dp3[u] += ((add * (dp2[u] - vis[u])) + (dp2[v] * dp[u]));
+                dp2[u] += dp2[v];
+                dp[u] += add;
+            }
         }
-        ll res = 0;
-        for (auto &[v, d] : vt.vadj[u])
-        {
-            if (v == p)
-                continue;
-            res += calc(v, u);
-        }
-        return min(res, vt.get_val(1 + cd - vt.depth[u], vt.depth[u] - 1));
     };
-    ll tot = 0;
-    for (int level = 1; level <= n; ++level)
+    while (q--)
     {
-        auto &nodes = vt.at_dep[level];
-        nodes = vt.pair_lcas(nodes);
-        cd = level;
-        if (nodes.empty())
+        int k = 0;
+        cin >> k;
+        vector<int> nodes(k);
+        for (int i = 0; i < k; ++i)
         {
-            break;
+            cin >> nodes[i];
+            vis[nodes[i]] += 1;
         }
-        tot += calc(nodes[0], 0);
+        vector<int> lcas = vt.pair_lcas(nodes);
+        ll tot = 0;
+        print_edges(lcas[0], 0); // Print edges starting from the first LCA
+        for (auto &i : lcas)
+        {
+            tot += dp3[i];
+            tot += (vis[i] * dp[i]);
+            vis[i] = 0;
+        }
+        cout << tot << '\n';
     }
-    cout << tot << '\n';
 }
 
 int main()
@@ -217,7 +200,7 @@ int main()
     freopen("input.txt", "r", stdin), freopen("output.txt", "w", stdout);
 #endif
     int tc = 1;
-    cin >> tc;
+    // cin >> tc;
     for (int i = 1; i <= tc; ++i)
     {
         solve();
