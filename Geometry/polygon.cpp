@@ -577,30 +577,3 @@ void solve()
 
 
 */
-
-void solve()
-{
-    
-}
-
-int main()
-{
-    ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
-#ifdef LOCAL_IO
-    freopen("input.txt", "r", stdin), freopen("output.txt", "w", stdout);
-#endif
-    int tc = 1;
-    // cin>>tc;
-    for (int i = 1; i <= tc; ++i)
-    {
-        solve();
-    }
-}
-
-// struct cmpX
-// {
-//     bool operator()(pt a, pt b)
-//     {
-//         return make_pair(a.x, a.y) < make_pair(b.x, b.y);
-//     }
-// };

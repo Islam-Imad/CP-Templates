@@ -25,6 +25,16 @@ int sign(ld a)
     return dcmp(a, 0.0);
 }
 
+ld deg_to_rad(ld deg)
+{
+    return deg * PI / 180.0;
+}
+
+ld rad_to_deg(ld rad)
+{
+    return rad * 180.0 / PI;
+}
+
 struct pt
 {
     ld x, y;
@@ -357,7 +367,7 @@ circle outside_circle(pt a, pt b, pt c)
     pt ab = b - a;
     pt ac = c - a;
     assert(cross(ab, ac) != 0); // no circumcircle if A,B,C aligned
-    pt center = a + perp(b * sq(c) - c * sq(b)) / cross(b, c) / 2;
+    pt center = a + perp(ab * sq(ac) - ac * sq(ab)) / cross(ab, ac) / 2;
     ld radius = abs(center - a);
     return circle(center, radius);
 }
@@ -384,28 +394,10 @@ vector<ld> bary(pt a, pt b, pt c, pt p)
 {
     vector<ld> res(3);
     ld ta = triangle_area(a, b, c);
-    res[0] = triangle_area(p,b,c) / ta;
-    res[1] = triangle_area(a,p,c) / ta;
-    res[2] = triangle_area(a,b,p) / ta;
+    res[0] = triangle_area(p, b, c) / ta;
+    res[1] = triangle_area(a, p, c) / ta;
+    res[2] = triangle_area(a, b, p) / ta;
     return res;
-}
-
-void solve()
-{
-}
-
-int main()
-{
-    ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
-#ifdef LOCAL_IO
-    freopen("input.txt", "r", stdin), freopen("output.txt", "w", stdout);
-#endif
-    int tc = 1;
-    // cin>>tc;
-    for (int i = 1; i <= tc; ++i)
-    {
-        solve();
-    }
 }
 
 // pt points_to_center2(pt a, pt b, pt c)

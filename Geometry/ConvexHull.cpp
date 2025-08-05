@@ -118,32 +118,3 @@ ll getConvexArea(const vector<point> &c)
     }
     return abs(area);
 }
-
-void solve()
-{
-    int n;
-    cin >> n;
-    vector<point> points(n);
-    for (int i = 0; i < n; ++i)
-    {
-        ll x, y;
-        cin >> x >> y;
-        points[i] = point(x, y);
-    }
-    points.push_back(points[0]);
-    cout << getConvexArea(points) << '\n';
-}
-
-int main()
-{
-    ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
-#ifndef ONLINE_JUDGE
-    freopen("input.txt", "r", stdin), freopen("output.txt", "w", stdout);
-#endif
-    int tc = 1;
-    // cin>>tc;
-    for (int i = 1; i <= tc; ++i)
-    {
-        solve();
-    }
-}

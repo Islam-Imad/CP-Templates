@@ -1,14 +1,3 @@
-#include <bits/stdc++.h>
-using namespace std;
-
-#define ll long long int
-#define X first
-#define Y second
-#define f(c) c - 'a'
-#define sz(x) ((int)(x).size())
-#define all(x) (x).begin(), (x).end()
-#define rall(x) (x).rbegin(), (x).rend()
-
 #define ld long double
 const ld EPS = 1e-9;
 const ld PI = acos(-1);
@@ -139,37 +128,3 @@ pair<pt, pt> closes_pair(vector<pt> v)
     }
     return res;
 }
-
-void solve()
-{
-    int n;
-    cin >> n;
-    vector<pt> v(n);
-    for (int i = 0; i < n; ++i)
-        cin >> v[i];
-    pair<pt, pt> res = closes_pair(v);
-    // cout << res.X << ' ' << res.Y << '\n';
-    cout << fixed << setprecision(10) << abs(res.X - res.Y);
-}
-
-int main()
-{
-    ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
-#ifdef LOCAL_IO
-    freopen("input.txt", "r", stdin), freopen("output.txt", "w", stdout);
-#endif
-    int tc = 1;
-    // cin>>tc;
-    for (int i = 1; i <= tc; ++i)
-    {
-        solve();
-    }
-}
-
-// struct cmpX
-// {
-//     bool operator()(pt a, pt b)
-//     {
-//         return make_pair(a.x, a.y) < make_pair(b.x, b.y);
-//     }
-// };

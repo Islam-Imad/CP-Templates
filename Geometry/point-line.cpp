@@ -383,30 +383,3 @@ ld seg_seg(pt a, pt b, pt c, pt d)
     return min({seg_point(a, b, c), seg_point(a, b, d),
                 seg_point(c, d, a), seg_point(c, d, b)});
 }
-
-void solve()
-{
-    cout << fixed << setprecision(10);
-    int q;
-    cin >> q;
-    for (int iq = 0; iq < q; ++iq)
-    {
-        pt a, b, c, d;
-        cin >> a >> b >> c >> d;
-        cout << seg_seg(a, b, c, d) << '\n';
-    }
-}
-
-int main()
-{
-    ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
-#ifdef LOCAL_IO
-    freopen("input.txt", "r", stdin), freopen("output.txt", "w", stdout);
-#endif
-    int tc = 1;
-    // cin>>tc;
-    for (int i = 1; i <= tc; ++i)
-    {
-        solve();
-    }
-}
