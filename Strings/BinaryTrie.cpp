@@ -1,185 +1,137 @@
-#include <bits/stdc++.h>
-using namespace std;
+// Binary Trie
+// Based on https://judge.yosupo.jp/submission/72657
+// Supports:
+// - get min / max / kth element
+// - given K, find x: x^K is min / max / kth
+//
+// Notes:
+// - high mem usage. If just need kth_element
+//   -> use OrderedSet.h if MAX_VALUE is ~10^6
+//   -> use STL/order_statistic.cpp if MAX_VALUE is big / custom type
+//
+// Tested:
+// - (insert, remove, min xor) https://judge.yosupo.jp/problem/set_xor_min
+// - (insert, max xor) https://cses.fi/problemset/task/1655/
+// Binary trie {{{
+template<
+    class Val = long long,   // values stored in Trie
+    class Count = long long, // frequency of values
+    int B = (sizeof(Val) * 8 - 1)  // max number of bit
+> struct BinaryTrie {
+    struct Node {
+        std::array<int, 2> child;
+        Count count;
+        Node() : child{-1, -1}, count(0) {}
+    };
 
-#define ll long long int
-#define X first
-#define Y second
-#define f(c) c - 'a'
-#define sz(x) ((int)(x).size())
-#define all(x) (x).begin(), (x).end()
-#define rall(x) (x).rbegin(), (x).rend()
+    BinaryTrie() : nodes{Node()} {} // create root node
 
-struct Node
-{
-    int freq;
-    Node *left;
-    Node *right;
-    Node() : freq(0), left(nullptr), right(nullptr) {}
-    Node(int f) : freq(f), left(nullptr), right(nullptr) {}
-    Node(int f, Node *l, Node *r) : freq(f), left(l), right(r) {}
-    ~Node()
-    {
-        if (left)
-            delete left;
-        if (right)
-            delete right;
-        left = right = nullptr;
-        freq = 0;
+    // Number of elements in the trie
+    Count size() {
+        return nodes[0].count;
+    }
+
+    void insert(Val x, Count cnt = 1) {
+        update(x, cnt);
+    }
+    void remove(Val x, Count cnt = 1) {
+        update(x, -cnt);
+    }
+
+    // return min(X ^ xor_val)
+    pair<Val, Node> min_element(Val xor_val = 0) {
+        assert(0 < size());
+        return kth_element(0, xor_val);
+    }
+
+    // return max(X ^ xor_val)
+    // Tested: https://www.spoj.com/problems/XORX/
+    pair<Val, Node> max_element(Val xor_val = 0) {
+        assert(0 < size());
+        return kth_element(size() - 1, xor_val);
+    }
+
+    // return k-th smallest (X ^ xor_val)  (0 <= K < size())
+    pair<Val, Node> kth_element(Count k, Val xor_val = 0) {
+        assert(0 <= k && k < size());
+        int u = 0;
+        Val x = 0;
+        for (int i = B - 1; i >= 0; i--) {
+            int b = get_bit(xor_val, i);
+            int v0 = get_child(u, b);
+            if (nodes[v0].count <= k) {
+                k -= nodes[v0].count;
+                u = get_child(u, 1-b);
+                x |= 1LL << i;
+            } else {
+                u = v0;
+            }
+        }
+        return {x, nodes[u]};
+    }
+
+    // return frequency of x
+    Count count(Val x) {
+        int u = 0;
+        for (int i = B - 1; i >= 0; i--) {
+            int b = get_bit(x, i);
+            if (nodes[u].child[b] == -1) {
+                return 0;
+            }
+            u = get_child(u, b);
+        }
+        return nodes[u].count;
+    }
+
+    // return how many values a where a ^ xor_val < x
+    // Tested: https://www.spoj.com/problems/SUBXOR/
+    Count count_less_than(Val x, Val xor_val) {
+        Count sum = 0;
+        int u = 0;
+        for (int i = B - 1; i >= 0; --i) {
+            int bx = get_bit(x, i);
+            int bxor = get_bit(xor_val, i);
+            if (bx == 1) {
+                // i = first bit where a^xor_val differ from x
+                if (nodes[u].child[bxor] >= 0) {
+                    sum += nodes[nodes[u].child[bxor]].count;
+                }
+            }
+            if (nodes[u].child[bx ^ bxor] == -1) {
+                return sum;
+            }
+            u = get_child(u, bx ^ bxor);
+        }
+        return sum;
+    }
+
+// private:
+    vector<Node> nodes;
+
+    int get_child(int p, int b) {
+        assert(0 <= p && p < (int) nodes.size());
+        assert(0 <= b && b < 2);
+        if (nodes[p].child[b] == -1) {
+            nodes[p].child[b] = nodes.size();
+            nodes.push_back(Node{});
+        }
+        return nodes[p].child[b];
+    }
+
+    void update(Val x, Count cnt) {
+        int u = 0;
+        for (int i = B - 1; i >= 0; i--) {
+            nodes[u].count += cnt;
+            assert(nodes[u].count >= 0);  // prevent over delete
+            int b = get_bit(x, i);
+            u = get_child(u, b);
+        }
+        nodes[u].count += cnt;
+        assert(nodes[u].count >= 0);  // prevent over delete
+    }
+
+    inline int get_bit(Val v, int bit) {
+        return (v >> bit) & 1;
     }
 };
-
-struct BinaryTrie
-{
-    Node *root;
-    BinaryTrie() : root(new Node()) {}
-    ~BinaryTrie() { delete root; }
-    
-    void Insert(ll num)
-    {
-        Node *curr = root;  // ✅ Use separate pointer
-        for (ll bit = 63; bit >= 0; --bit)
-        {
-            int b = (num >> bit) & 1;
-            if (b == 0)
-            {
-                if (!curr->left)
-                    curr->left = new Node();
-                curr = curr->left;
-            }
-            else
-            {
-                if (!curr->right)
-                    curr->right = new Node();
-                curr = curr->right;
-            }
-            curr->freq++;
-        }
-    }
-
-    void Remove(ll num)
-    {
-        Node *curr = root;  // ✅ Use separate pointer
-        for (ll bit = 63; bit >= 0; --bit)
-        {
-            int b = (num >> bit) & 1;
-            if (b == 0)
-            {
-                curr = curr->left;
-            }
-            else
-            {
-                curr = curr->right;
-            }
-            if (curr) curr->freq--;  // ✅ Add null check
-        }
-    }
-
-    ll maxXor(ll num)
-    {
-        Node *node = root;
-        ll ans = 0;
-        for (ll bit = 63; bit >= 0; --bit)
-        {
-            int b = (num >> bit) & 1;
-            if (b == 0)
-            {
-                if (node->right && node->right->freq > 0)
-                {
-                    ans |= (1LL << bit);
-                    node = node->right;
-                }
-                else
-                {
-                    node = node->left;
-                }
-            }
-            else
-            {
-                if (node->left && node->left->freq > 0)
-                {
-                    ans |= (1LL << bit);
-                    node = node->left;
-                }
-                else
-                {
-                    node = node->right;
-                }
-            }
-        }
-        return ans;
-    }
-
-    ll minXor(ll num)
-    {
-        Node *node = root;
-        ll ans = 0;
-        for (ll bit = 63; bit >= 0; --bit)
-        {
-            int b = (num >> bit) & 1;
-            if (b == 0)
-            {
-                if (node->left && node->left->freq > 0)
-                {
-                    node = node->left;
-                }
-                else
-                {
-                    ans |= (1LL << bit);
-                    node = node->right;
-                }
-            }
-            else
-            {
-                if (node->right && node->right->freq > 0)
-                {
-                    node = node->right;
-                }
-                else
-                {
-                    ans |= (1LL << bit);
-                    node = node->left;
-                }
-            }
-        }
-        return ans;
-    }
-};
-
-void solve()
-{
-    int n;
-    cin >> n;
-    vector<ll> arr(n);
-    BinaryTrie trie;
-    ll xr = 0;
-    for (int i = 0; i < n; ++i)
-    {
-        cin >> arr[i];
-    }
-    ll res = 0;
-    trie.Insert(0);
-    
-    // Uncommented working version
-    for (int i = 0; i < n; ++i)
-    {
-        xr ^= arr[i];
-        res = max(res, trie.maxXor(xr));
-        trie.Insert(xr);
-    }
-    cout << res << '\n';
-}
-
-int main()
-{
-    ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
-#ifdef LOCAL_IO
-    freopen("input.txt", "r", stdin), freopen("output.txt", "w", stdout);
-#endif
-    int tc = 1;
-    // cin>>tc;
-    for (int i = 1; i <= tc; ++i)
-    {
-        solve();
-    }
-    return 0;
-}
+// }}}
