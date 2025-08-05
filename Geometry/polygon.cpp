@@ -555,6 +555,29 @@ ld polygon_diameter(const vector<pt> &p)
     return res;
 }
 
+/*
+
+void solve()
+{
+    int n;
+    cin >> n;
+    vector<pair<int, int>> v(n);
+    for (int i = 0; i < n; ++i)
+        cin >> v[i].X >> v[i].Y;
+    v.push_back(v[0]);
+    ll res = 0;
+    ll area = 0;
+    for (int i = 0; i < n; ++i)
+    {
+        res += __gcd(abs(v[i].X - v[i + 1].X), abs(v[i].Y - v[i + 1].Y));
+        area += ((1ll * v[i].X - v[i + 1].X) * (v[i].Y + v[i + 1].Y));
+    }
+    area = abs(area);
+    cout << (area - res) / 2 + 1 << ' ' << res << '\n';
+
+
+*/
+
 void solve()
 {
     

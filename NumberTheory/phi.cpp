@@ -47,6 +47,7 @@ ll phi(ll num)
 https://www.spoj.com/problems/ETF/
 */
 /*
+    phi[i] = the number of integers from 1 to i that are coprime with i
     phi(a * b) = phi(a) * phi(b) when a and b are coprime or __gcd(a,b) == 1
     phi(p ^ k) = p ^ k - p ^ (k - 1) = p ^ (k - 1) * (p - 1) where p is prime and k >= 1
 */
