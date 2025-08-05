@@ -4,110 +4,163 @@ using namespace std;
 #define ll long long int
 #define X first
 #define Y second
+#define f(c) c - 'a'
+#define sz(x) ((int)(x).size())
+#define all(x) (x).begin(), (x).end()
+#define rall(x) (x).rbegin(), (x).rend()
 
-// handle base zero and one
-template <typename T, typename U>
-class SegmentTree
+const int N = 1e5 + 5;
+const ll INF = 1e18;
+
+ll a[N];
+
+struct node
 {
-private:
-
-    #define lc(node) (2 * node)
-    #define rc(node) (2 * node + 1)
-    #define mid(left, right) ((left + right) / 2)
-    
-    const T DEFAULT = 0; // Replace this line with DEFAULT
-    const U NO_UPDATE = 0; // Replace this line with NO_UPDATE
-    int size;
-    vector<T> seg_tree;
-    vector<U> lazy;
-
-    T Operation(T a, T b){
-        T res = min(a,b); // edit this line
-        return res;
-    }
-
-    void Propogate(int node, int l, int r){
-        // edit this also
-        if (lazy[node] != NO_UPDATE){
-            seg_tree[node] += lazy[node];
-            if (l != r)
-            {
-                lazy[lc(node)] = lazy[node];
-                lazy[rc(node)] = lazy[node];
-            }
-            lazy[node] = NO_UPDATE;
-        }
-    }
-
-    void Build(int node, int l, int r, const vector<T> &arr){
-        if (l == r){
-            seg_tree[node] = arr[l]; // edit this line (base zero or base one)
-            return;
-        }
-        Build(lc(node), l, mid(l, r), arr);
-        Build(rc(node), mid(l, r) + 1, r, arr);
-        seg_tree[node] = Operation(seg_tree[lc(node)], seg_tree[rc(node)]);
-    }
-
-    void Update(int node, int l, int r, int ul, int ur, U val){
-        Propogate(node, l, r);
-        if (l > ur || r < ul)
-            return;
-        if (l >= ul && r <= ur){
-            lazy[node] += val;
-            Propogate(node, l, r);
-            return;
-        }
-        Update(lc(node), l, mid(l, r), ul, ur, val);
-        Update(rc(node), mid(l, r) + 1, r, ul, ur, val);
-        seg_tree[node] = Operation(seg_tree[lc(node)], seg_tree[rc(node)]);
-    }
-
-    U Query(int node, int l, int r, int ql, int qr){
-        Propogate(node, l, r);
-        if (l > qr || r < ql)
-            return DEFAULT;
-        if (l >= ql && r <= qr)
-            return seg_tree[node]; // Return the data member of the node struct
-        return Operation(Query(lc(node), l, mid(l, r), ql, qr), Query(rc(node), mid(l, r) + 1, r, ql, qr));
-    }
-
-public:
-    SegmentTree() = default;
-    SegmentTree(U DEFAULT,U NO_UPDATE, int size, const vector<T> &arr = {}) // Replace DEFAULT with T DEFAULT
-    : size(size)
-    , DEFAULT(DEFAULT)
-    , NO_UPDATE(NO_UPDATE)
-    , lazy(4 * (size + 1),NO_UPDATE)
-    , seg_tree(4 * (size + 1),DEFAULT)
-    {
-        if (!arr.empty())
-            Build(1, 1, size, arr);
-    };
-
-    void Update(int l, int r, U val)
-    {
-        Update(1, 1, size, l, r, val);
-    }
-
-    U Query(int l, int r){
-        return Query(1, 1, size, l, r);
-    }
+    ll min_A;
+    ll min_B;
+    ll min_D;
+    ll lazy;
+    ll res;
+    node() : min_A(0), min_B(INF), min_D(0), lazy(0), res(0) {}
 };
 
-void solve(){
-    SegmentTree<ll,ll> st(0,0,10);
+node merge(const node &a, const node &b)
+{
+    node res;
+    res.min_A = min(a.min_A, b.min_A);
+    res.min_B = min(a.min_B, b.min_B);
+    res.min_D = min(a.min_D, b.min_D);
+    res.res = min(res.min_A, res.min_B);
+    return res;
+}
+
+node tree[4 * N];
+
+void build(int id, int l, int r)
+{
+    if (l == r)
+    {
+        tree[id].min_A = a[l];
+        tree[id].min_B = INF;
+        tree[id].min_D = a[l];
+        tree[id].lazy = 0;
+        tree[id].res = a[l];
+        return;
+    }
+    int mid = (l + r) / 2;
+    build(2 * id, l, mid);
+    build(2 * id + 1, mid + 1, r);
+    tree[id] = merge(tree[2 * id], tree[2 * id + 1]);
+}
+
+void push(int id, int l, int r)
+{
+    if (tree[id].lazy)
+    {
+        tree[id].min_B += tree[id].lazy;
+        tree[id].min_D -= tree[id].lazy;
+        tree[id].res = min(tree[id].min_A, tree[id].min_B);
+
+        if (l != r) // not a leaf node
+        {
+            tree[2 * id].lazy += tree[id].lazy;
+            tree[2 * id + 1].lazy += tree[id].lazy;
+        }
+
+        tree[id].lazy = 0;
+    }
+}
+
+void update(int id, int l, int r, int ql, int qr, ll val)
+{
+    push(id, l, r);
+    if (l > qr || r < ql)
+        return;             // no overlap
+    if (l >= ql && r <= qr) // total overlap
+    {
+        tree[id].lazy += val;
+        push(id, l, r);
+        return;
+    }
+    int mid = (l + r) / 2;
+    update(2 * id, l, mid, ql, qr, val);
+    update(2 * id + 1, mid + 1, r, ql, qr, val);
+    tree[id] = merge(tree[2 * id], tree[2 * id + 1]);
+}
+
+void fix(int id, int l, int r, int ql, int qr)
+{
+    if (l > qr || r < ql)
+        return; // no overlap
+    push(id, l, r);
+    if (tree[id].min_D > 0)
+        return;
+    if (l == r)
+    {
+        tree[id].min_B -= INF;
+        tree[id].min_A = INF;
+        tree[id].lazy = 0;
+        tree[id].res = tree[id].min_B;
+        tree[id].min_D = INF;
+        return;
+    }
+    int mid = (l + r) / 2;
+    fix(2 * id, l, mid, ql, qr);
+    fix(2 * id + 1, mid + 1, r, ql, qr);
+    tree[id] = merge(tree[2 * id], tree[2 * id + 1]);
+}
+
+ll query(int id, int l, int r, int ql, int qr)
+{
+    push(id, l, r);
+    if (l > qr || r < ql)
+        return 1e18;
+    if (l >= ql && r <= qr)
+    {
+        return tree[id].res;
+    }
+    int mid = (l + r) / 2;
+    return min(query(2 * id, l, mid, ql, qr), query(2 * id + 1, mid + 1, r, ql, qr));
+}
+
+void solve()
+{
+    int n, q;
+    cin >> n >> q;
+    for (int i = 1; i <= n; ++i)
+    {
+        cin >> a[i];
+    }
+    build(1, 1, n);
+    while (q--)
+    {
+        ll type, l, r;
+        cin >> type >> l >> r;
+        if (type == 1)
+        {
+            ll val;
+            cin >> val;
+            update(1, 1, n, l, r, val);
+            fix(1, 1, n, 1, n);
+        }
+        else if (type == 2)
+        {
+            ll ans = query(1, 1, n, l, r);
+            cout << ans << '\n';
+        }
+    }
 }
 
 int main()
 {
-ios_base::sync_with_stdio(false),cin.tie(nullptr),cout.tie(nullptr);
-#ifndef ONLINE_JUDGE
-freopen("input.txt", "r", stdin), freopen("output.txt", "w", stdout);
+    ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
+#ifdef LOCAL_IO
+    freopen("input.txt", "r", stdin), freopen("output.txt", "w", stdout);
 #endif
     int tc = 1;
     // cin>>tc;
-    for(int i=1;i<=tc;++i){
+    for (int i = 1; i <= tc; ++i)
+    {
         solve();
     }
 }
