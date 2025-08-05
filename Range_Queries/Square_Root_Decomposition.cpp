@@ -46,6 +46,29 @@ struct sqrt_decomposition
     {
         if (l > r)
             return 0;
-        return query(r) - query(l - 1);
+        if(block[l / len] == block[r / len]) {
+            T res = 0;
+            for (int i = l; i <= r; ++i)
+            {
+                res += arr[i];
+            }
+            return res;
+        }
+        T res = 0;
+        int start_block = l / len;
+        int end_block = r / len;
+        for (int i = start_block + 1; i < end_block; ++i)
+        {
+            res += block[i];
+        }
+        for (int i = l; i < (start_block + 1) * len; ++i)
+        {
+            res += arr[i];
+        }
+        for (int i = end_block * len; i <= r; ++i)
+        {
+            res += arr[i];
+        }
+        return res;
     }
 };
