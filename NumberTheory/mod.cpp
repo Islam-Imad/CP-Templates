@@ -77,6 +77,17 @@ ll nPr(int n, int r)
     return mul_mod(fac[n], ifac[n - r]);
 }
 
+ll catalan(int n)
+{
+    if (n == 0)
+        return 1;
+    return div_mod(nCr(2 * n, n), n + 1);
+}
+
+ll starts_bars(ll balls, ll boxes)
+{
+    return nCr(balls + boxes - 1, boxes - 1);
+}
 
 
 void solve()
